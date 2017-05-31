@@ -1,0 +1,10 @@
+# User-specific/-generated files
+logs/
+configs/
+
+# Python-generated files
+__pycache__/
+*.pyc
+
+# IDE-generated files
+.idea
