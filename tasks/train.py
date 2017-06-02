@@ -17,5 +17,6 @@ class Train(Task):
         parser.add_argument('config', help='Path to config file.')
 
     def run(self, args):
-        """ Run tensorboard on remote server and connect to it. """
+        """ Adds a run configuration to the 'gpu' queue. """
+        # TODO
         pass

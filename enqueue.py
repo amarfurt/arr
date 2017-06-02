@@ -13,6 +13,7 @@ def parse_args():
                         help='The name of the RabbitMQ queue to send the message to.')
     parser.add_argument('--host', default='localhost',
                         help='The host where the RabbitMQ server is running.')
+    parser.add_argument('--rpc', default=None, help='The correlation ID (only for RPC calls).')
     return parser.parse_args()
 
 
@@ -20,8 +21,12 @@ def main(args):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=args.host))
     channel = connection.channel()
     channel.queue_declare(queue=args.queue, durable=True)
+    properties = pika.BasicProperties(delivery_mode=2)
+    if args.rpc:
+        properties.reply_to = 'rpc_response'
+        properties.correlation_id = args.rpc
     channel.basic_publish(exchange='', routing_key=args.queue, body=args.message,
-                          properties=pika.BasicProperties(delivery_mode=2))
+                          properties=properties)
     connection.close()
 
 if __name__ == '__main__':

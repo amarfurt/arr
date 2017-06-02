@@ -2,6 +2,7 @@
 Control process for workers. Takes commands from the 'control' queue.
 """
 
+import pika
 from workers.rmq_worker import Rabbit
 from workers.cmd_runner import CmdRunner
 from workers.gpu_cmd_runner import GPUCmdRunner
@@ -18,7 +19,7 @@ class Controller(Rabbit):
         """ Process control requests. """
         msg = body.decode()
         if msg.startswith('status'):
-            self.status()
+            self.status(channel, properties)
         elif msg.startswith('add cpu'):
             self.add_cpu()
         elif msg.startswith('remove cpu'):
@@ -31,10 +32,16 @@ class Controller(Rabbit):
             self.remove_gpu(gpu)
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
-    def status(self):
+    def status(self, channel, properties):
         """ Reports the current status. """
-        # TODO: enqueue result in status queue / RPC pattern?
-        pass
+        lines = ['%d CPU workers' % len(self.cpu_workers)]
+        lines.extend([w.status() for w in self.cpu_workers])
+        lines.append('%d GPU workers' % len(self.gpu_workers))
+        lines.extend(['GPU %d: %s' % (gpu, w.status()) for (gpu, w) in self.gpu_workers.items()])
+        message = '\n'.join(lines)
+        channel.basic_publish(exchange='', routing_key=properties.reply_to, body=message,
+                              properties=pika.BasicProperties(
+                                  correlation_id=properties.correlation_id))
 
     def add_cpu(self):
         """ Adds a CPU worker. """
