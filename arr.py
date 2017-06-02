@@ -4,7 +4,7 @@ Assistant for rapid research.
 
 import os
 import argparse
-from tasks import tb, train
+from tasks import tb, train, status
 from utils.servers import Servers
 
 
@@ -14,6 +14,7 @@ def init_tasks():
     config_path = os.path.join(base_dir, 'configs', 'servers.json')
     servers = Servers(config_path)
     return {
+        'status': status.Status(servers),
         'train': train.Train(servers),
         'tb': tb.Tensorboard(servers)
     }

@@ -35,6 +35,7 @@ class Rabbit(threading.Thread, ABC):
     def stop(self):
         """ Tells this worker to stop consuming messages. """
         self.log.info('Stopping worker...')
+        # TODO: is this blocking?
         self.channel.stop_consuming()
         self.log.info('Stopped consuming')
         self.connection.close()
