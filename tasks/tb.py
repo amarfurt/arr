@@ -13,21 +13,19 @@ from utils.timeout import Timeout, TimeoutException
 
 class Tensorboard(Task):
 
-    def __init__(self, servers):
-        self.servers = servers
-
-    def add_parser(self, registry):
+    @staticmethod
+    def add_parser(registry):
         parser = registry.add_parser('tb', help='Open tensorboard on remote server.')
-        parser.add_argument('server', choices=self.servers.names(),
-                            help='On which server to start tensorboard.')
         parser.add_argument('logdir', help='Remote logdir (path from home directory).')
+
+    def __init__(self, server):
+        self.server = server
 
     def run(self, args):
         """ Run tensorboard on remote server and connect to it. """
-        server_address = self.servers.address(args.server)
         client = paramiko.SSHClient()
         client.load_system_host_keys()
-        client.connect(server_address)
+        client.connect(self.server.address)
 
         # start tensorboard on remote server
         # try port different from the standard 6006 to avoid conflicts with other users
@@ -55,7 +53,7 @@ class Tensorboard(Task):
         while True:
             tunnel = subprocess.Popen(
                 'ssh -nNT -o ExitOnForwardFailure=yes -L %d:localhost:%d %s' %
-                (local_port, remote_port, server_address),
+                (local_port, remote_port, self.server.address),
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)

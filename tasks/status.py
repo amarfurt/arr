@@ -9,19 +9,15 @@ from tasks.task import Task
 
 class Status(Task):
 
-    def __init__(self, servers):
-        self.servers = servers
-
-    def add_parser(self, registry):
-        parser = registry.add_parser('status', help='Queries the resource status.')
-        parser.add_argument('server', choices=self.servers.names(), help='Remote server to query.')
+    @staticmethod
+    def add_parser(registry):
+        registry.add_parser('status', help='Queries the resource status.')
 
     def run(self, args):
         """ Adds a 'status' request to the 'control' queue. """
-        server_address = self.servers.address(args.server)
         client = paramiko.SSHClient()
         client.load_system_host_keys()
-        client.connect(server_address)
+        client.connect(self.server.address)
 
         # enqueue a 'status' message on the 'control' queue
         corr_id = int(time.time())  # correlation id is current timestamp
