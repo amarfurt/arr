@@ -27,3 +27,4 @@ class Train(Task):
         # enqueue the contents of the config file on the 'gpu' queue
         client.exec_command('python3 code/arr/enqueue.py --queue gpu --message \'%s\''
                             % json.dumps(config))
+        client.close()
