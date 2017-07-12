@@ -19,7 +19,14 @@ class CmdRunner(Rabbit):
         self.cur_job_time = None
 
     def callback(self, channel, method, properties, body):
+        # parse the config
         config = json.loads(body.decode())
+
+        # if successful, consumer acks the message and processes it
+        # can't wait for the command to finish due to connection timeout
+        channel.basic_ack(delivery_tag=method.delivery_tag)
+
+        # execute the command
         executable = config['executable']
         args = ''
         logs = ''
@@ -37,7 +44,6 @@ class CmdRunner(Rabbit):
                                     os.path.join(config['logdir'], 'stderr.log'))
         command = ' '.join(filter(None, [executable, args, logs]))
         self.execute(command)
-        channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def execute(self, command):
         """ Executes a command in the shell. """

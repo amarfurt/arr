@@ -20,7 +20,7 @@ def main(args):
     # configure logging
     logformat = '[%(asctime)s][%(name)s][%(levelname)s] %(message)s'
     loglevel = logging.getLevelName(args.loglevel)
-    logging.basicConfig(filename=args.logpath, format=logformat,level=loglevel)
+    logging.basicConfig(filename=args.logpath, format=logformat, level=loglevel)
     log = logging.getLogger('main')
     log.info('Starting system...')
 
