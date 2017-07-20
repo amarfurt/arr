@@ -18,5 +18,5 @@ class Start(Task):
         client = paramiko.SSHClient()
         client.load_system_host_keys()
         client.connect(self.server.address)
-        client.exec_command('python3 code/arr/remote.py &>> logs/remote.log &')
+        client.exec_command('python3 code/arr/remote.py --loglevel DEBUG &>> logs/remote.log &')
         client.close()

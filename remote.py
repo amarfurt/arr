@@ -21,6 +21,7 @@ def main(args):
     logformat = '[%(asctime)s][%(name)s][%(levelname)s] %(message)s'
     loglevel = logging.getLevelName(args.loglevel)
     logging.basicConfig(filename=args.logpath, format=logformat, level=loglevel)
+    logging.getLogger('pika').setLevel(logging.WARNING)
     log = logging.getLogger('main')
     log.info('Starting system...')
 
