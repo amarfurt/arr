@@ -5,15 +5,15 @@ Assistant for rapid research.
 import os
 import argparse
 import utils.servers
-from tasks import control, start, status, stop, tb, train
+from tasks import control, run, start, status, stop, tb
 
 TASKS = {
     'control': control.Control,
+    'run': run.Run,
     'start': start.Start,
     'status': status.Status,
     'stop': stop.Stop,
     'tb': tb.Tensorboard,
-    'train': train.Train,
 }
 
 
