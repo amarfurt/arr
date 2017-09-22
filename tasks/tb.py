@@ -32,7 +32,7 @@ class Tensorboard(Task):
         remote_port = 6060
         while True:
             stdin, stdout, stderr = client.exec_command(
-                'python3 -m tensorflow.tensorboard --logdir %s --port %d' %
+                'python3 -m tensorboard.main --logdir %s --port %d' %
                 (args.logdir, remote_port), get_pty=True
             )
 
