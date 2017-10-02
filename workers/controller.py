@@ -30,6 +30,8 @@ class Controller(Rabbit):
         elif msg.startswith('remove gpu'):
             gpu = int(msg.split()[2])
             self.remove_gpu(gpu)
+        else:
+            self.log.warn('Unknown message: %s' % msg)
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def status(self, channel, properties):
@@ -52,7 +54,6 @@ class Controller(Rabbit):
 
     def remove_cpu(self):
         """ Removes a CPU worker. """
-        # TODO: remove an idle worker, for now removes the last in the list
         worker = self.cpu_workers.pop()
         worker.stop()
         self.log.info('CPU worker stopped')
@@ -66,7 +67,7 @@ class Controller(Rabbit):
 
     def remove_gpu(self, gpu):
         """ Removes a GPU worker. """
-        # TODO
-        self.gpu_workers[gpu].stop()
-        del self.gpu_workers[gpu]
-        self.log.info('GPU worker %d stopped' % gpu)
+        if gpu in self.gpu_workers:
+            self.gpu_workers[gpu].stop()
+            del self.gpu_workers[gpu]
+            self.log.info('GPU worker %d stopped' % gpu)
