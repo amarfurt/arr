@@ -18,9 +18,6 @@ class Tensorboard(Task):
         parser = registry.add_parser('tb', help='Open tensorboard on remote server.')
         parser.add_argument('logdir', help='Remote logdir (path from home directory).')
 
-    def __init__(self, server):
-        self.server = server
-
     def run(self, args):
         """ Run tensorboard on remote server and connect to it. """
         client = paramiko.SSHClient()
