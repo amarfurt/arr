@@ -5,10 +5,11 @@ Assistant for rapid research.
 import os
 import argparse
 import utils.servers
-from tasks import control, pull, run, start, status, stop, tb
+from tasks import control, grid, pull, run, start, status, stop, tb
 
 TASKS = {
     'control': control.Control,
+    'grid': grid.Grid,
     'pull': pull.Pull,
     'run': run.Run,
     'start': start.Start,
