@@ -25,11 +25,13 @@ class Controller(Rabbit):
         elif msg.startswith('remove cpu'):
             self.remove_cpu()
         elif msg.startswith('add gpu'):
-            gpu = int(msg.split()[2])
-            self.add_gpu(gpu)
+            gpus = list(map(int, msg.split()[2].split(',')))
+            for gpu in gpus:
+                self.add_gpu(gpu)
         elif msg.startswith('remove gpu'):
-            gpu = int(msg.split()[2])
-            self.remove_gpu(gpu)
+            gpus = list(map(int, msg.split()[2].split(',')))
+            for gpu in gpus:
+                self.remove_gpu(gpu)
         else:
             self.log.warn('Unknown message: %s' % msg)
         channel.basic_ack(delivery_tag=method.delivery_tag)
