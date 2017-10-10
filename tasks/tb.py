@@ -37,7 +37,7 @@ class Tensorboard(Task):
             try:
                 with Timeout(2):
                     out = stdout.read().decode()
-                    if 'address is in use' in out:
+                    if 'it was already in use' in out:
                         remote_port += 1
                     else:
                         print('Unexpected response:', out)
