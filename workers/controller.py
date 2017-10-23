@@ -4,7 +4,7 @@ Control process for workers. Takes commands from the 'control' queue.
 
 import pika
 from workers.rmq_worker import Rabbit
-from workers.cmd_runner import CmdRunner
+from workers.cpu_cmd_runner import CPUCmdRunner
 from workers.gpu_cmd_runner import GPUCmdRunner
 
 
@@ -49,7 +49,7 @@ class Controller(Rabbit):
 
     def add_cpu(self):
         """ Adds a CPU worker. """
-        cpu_worker = CmdRunner(self.host, 'cpu')
+        cpu_worker = CPUCmdRunner(self.host, 'cpu')
         self.cpu_workers.append(cpu_worker)
         cpu_worker.start()
         self.log.info('CPU worker added')
