@@ -12,7 +12,7 @@ class Pull(Task):
     def add_parser(registry):
         parser = registry.add_parser('pull', help='Git pulls a remote branch.')
         parser.add_argument('codedir', help='Path to git repo on server.')
-        parser.add_argument('branch', default='master', help='Branch to pull.')
+        parser.add_argument('-b', '--branch', default='master', help='Branch to pull.')
 
     def run(self, args):
         """ Git pulls a remote branch. """
